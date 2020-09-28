@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Agenda_DMOS5</string>
+    <string name="tag">AGENDA</string>
+
+    <!--Constantes de dados -->
+    <string name="data_file">dados_contatos</string>
+    <string name="table_contatos">contatos</string>
+    <string name="column_nome">nome</string>
+    <string name="column_telefone">telefone</string>
+    <string name="column_celular">celular</string>
+
+    <!--Mensagens do app-->
+    <string name="hint_nome">Nome do Contato</string>
+    <string name="hint_telefone">Telefone Fixo</string>
+    <string name="hint_celular">Telefone Celular</string>
+    <string name="salvar">Salvar</string>
+    <string name="prencher_dados">Informe o nome, telefone e celular do contato</string>
+    <string name="erro_dados_invalidos">Dados inválidos</string>
+    <string name="erro_insercao_dados">Erro ao salvar o site</string>
+    <string name="sucesso">Salvo com sucesso!</string>
+    <string name="detalhe">Contato</string>
+
+    <!-- Texto da NovoSiteActivity -->
+    <string name="actnovo_button_save">Salvar</string>
+    <string name="actnovo_hint_address">Informe a URL do site</string>
+    <string name="actnovo_hint_title">Apelido do site</string>
+    <string name="actnovo_msg_save_sucess">Salvo com sucesso</string>
+    <string name="actnovo_msg_erro_data_missing">Por favor, preencha todos os dados</string>
+    <string name="erro_empty_dados">O nome e o telefone ou celular são obrigatórios.</string>
+    <string name="erro_null_contato">Contato inválido!</string>
+</resources>
