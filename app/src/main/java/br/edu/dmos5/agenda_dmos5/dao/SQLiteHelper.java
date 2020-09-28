@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "contato.db";
 
     private Context context;
@@ -28,6 +28,13 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        switch (oldVersion) {
+            case 1:
+                db.execSQL(UsuarioContratoDao.CREATE_TABLE);
+                db.execSQL(UsuarioContratoDao.INSERT_PRIMEIRO_USUARIO);
+                db.execSQL(ContatoContratoDao.ALTER_TABLE_ADD_USUARIO_ID);
+                db.execSQL(ContatoContratoDao.UPDATE_SET_USUARIO_ID_1);
+        }
     }
+
 }

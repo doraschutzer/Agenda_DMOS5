@@ -1,48 +1,75 @@
 package br.edu.dmos5.agenda_dmos5.view;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import java.util.List;
 
 import br.edu.dmos5.agenda_dmos5.R;
+import br.edu.dmos5.agenda_dmos5.dao.ContatoDao;
 import br.edu.dmos5.agenda_dmos5.model.Contato;
 
-public class ItemContatoAdapter extends ArrayAdapter {
-    private LayoutInflater inflater;
+public class ItemContatoAdapter extends RecyclerView.Adapter<ItemContatoAdapter.ContatosViewHolder> {
 
-    public ItemContatoAdapter(Context context, List<Contato> contatoList) {
-        super(context, R.layout.item_lista_contato, contatoList);
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    private ContatoDao contatoDao;
+    private List<Contato> contatoList;
+    private static RecyclerItemClickListener clickListener;
+
+    public ItemContatoAdapter(List<Contato> siteList, Context context) {
+        this.contatoList = siteList;
+        contatoDao = new ContatoDao(context);
+    }
+
+    public void setClickListener(RecyclerItemClickListener clickListener) {
+        ItemContatoAdapter.clickListener = clickListener;
     }
 
     @NonNull
     @Override
-    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent)
-    {
-        final ViewHolder holder;
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.item_lista_contato, null);
-            holder = new ViewHolder();
-            holder.tituloTextView = convertView.findViewById(R.id.text_nome);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        Contato obj = (Contato) getItem(position);
-        holder.tituloTextView.setText(obj.getNome());
-        return convertView;
+    public ContatosViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view;
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lista_contato, parent,
+                false);
+        ContatosViewHolder viewHolder = new ContatosViewHolder(view);
+        return viewHolder;
     }
 
-    private static class ViewHolder {
-        public TextView tituloTextView;
+    @Override
+    public void onBindViewHolder(@NonNull ContatosViewHolder holder, int position) {
+        holder.nomeTextView.setText(contatoList.get(position).getNome());
+    }
+
+    @Override
+    public int getItemCount() {
+        return contatoList.size();
+    }
+
+    public static class ContatosViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        public TextView nomeTextView;
+
+        /*
+        O Construtor recupera os elementos de layout
+         */
+        public ContatosViewHolder(@NonNull View itemView) {
+            super(itemView);
+            nomeTextView = itemView.findViewById(R.id.text_nome);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (clickListener != null)
+                clickListener.onItemClick(getAdapterPosition());
+        }
+    }
+
+    public void updateDataSet(){
+        notifyDataSetChanged();
     }
 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/layout_novo_contato"
-    tools:context=".view.NovoContatoActivity">
+    tools:context=".view.NovoContatoActivity_2">
 
     <EditText
         android:id="@+id/edittext_nome"

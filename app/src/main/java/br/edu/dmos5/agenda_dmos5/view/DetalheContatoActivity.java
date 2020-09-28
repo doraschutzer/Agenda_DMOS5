@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.TextView;
 import br.edu.dmos5.agenda_dmos5.R;
+import br.edu.dmos5.agenda_dmos5.constantes.Constantes;
 import br.edu.dmos5.agenda_dmos5.model.Contato;
+import br.edu.dmos5.agenda_dmos5.model.Usuario;
 
 public class DetalheContatoActivity extends AppCompatActivity {
 
@@ -42,18 +44,20 @@ public class DetalheContatoActivity extends AppCompatActivity {
         Bundle embrulho = intent.getExtras();
 
         if(embrulho != null){
-            String nome     = embrulho.getString(ContatosActivity.KEY_NOME);
-            String telefone = embrulho.getString(ContatosActivity.KEY_TELEFONE);
-            String celular  = embrulho.getString(ContatosActivity.KEY_CELULAR);
+            String nome     = embrulho.getString(Constantes.ATTR_NOME);
+            String telefone = embrulho.getString(Constantes.ATTR_TELEFONE);
+            String celular  = embrulho.getString(Constantes.ATTR_CELULAR);
 
-            contato = new Contato(nome,telefone,celular);
+            contato = new Contato(nome,telefone,celular,Usuario.getUsuarioLogado());
         }
     }
 
     private void exibeDados(){
-        nomeTextView.setText(contato.getNome());
-        telefoneTextView.setText(contato.getTelefone());
-        celularTextView.setText(contato.getCelular());
+        if(contato != null) {
+            nomeTextView.setText(contato.getNome());
+            telefoneTextView.setText(contato.getTelefone());
+            celularTextView.setText(contato.getCelular());
+        }
     }
 
     @Override

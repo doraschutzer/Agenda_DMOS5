@@ -11,16 +11,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import br.edu.dmos5.agenda_dmos5.R;
+import br.edu.dmos5.agenda_dmos5.constantes.Constantes;
 import br.edu.dmos5.agenda_dmos5.dao.ContatoDao;
+import br.edu.dmos5.agenda_dmos5.helper.ShowMessageScreenHelper;
 import br.edu.dmos5.agenda_dmos5.model.Contato;
+import br.edu.dmos5.agenda_dmos5.model.Usuario;
 
 public class NovoContatoActivity extends AppCompatActivity {
 
+    private ConstraintLayout constraintLayout;
     private EditText nomeEditText;
     private EditText telefoneEditText;
     private EditText celularEditText;
@@ -39,6 +42,7 @@ public class NovoContatoActivity extends AppCompatActivity {
         celularEditText = findViewById(R.id.edittext_celular);
         salvarButton = findViewById(R.id.button_salvar_contato);
         salvarButton.setOnClickListener(this::salvarContato);
+        constraintLayout = findViewById(R.id.layout_novo_contato);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -60,11 +64,14 @@ public class NovoContatoActivity extends AppCompatActivity {
         celular = celularEditText.getText().toString();
 
         if(nome.isEmpty() && (telefone.isEmpty() || celular.isEmpty())){
-            showSnackbar(getString(R.string.erro_empty_dados));
+            ShowMessageScreenHelper.showSnackbar(
+                    getString(R.string.erro_empty_dados)
+                    , constraintLayout
+            );
         }else{
             contatoDao = new ContatoDao(getApplicationContext());
             try {
-                contatoDao.add(new Contato(nome, telefone, celular));
+                contatoDao.add(new Contato(nome, telefone, celular, Usuario.getUsuarioLogado()));
                 finalizar(true);
             } catch (NullPointerException e){
                 showSnackbar(getString(R.string.erro_null_contato));
@@ -83,7 +90,11 @@ public class NovoContatoActivity extends AppCompatActivity {
 
     private void finalizar(boolean sucesso){
         if(sucesso){
-            setResult(Activity.RESULT_OK);
+            Intent result = new Intent();
+            result.putExtra(Constantes.ATTR_NOME, nomeEditText.getText().toString());
+            result.putExtra(Constantes.ATTR_TELEFONE, telefoneEditText.getText().toString());
+            result.putExtra(Constantes.ATTR_CELULAR, celularEditText.getText().toString());
+            setResult(Activity.RESULT_OK, result);
         }else{
             setResult(Activity.RESULT_CANCELED);
         }

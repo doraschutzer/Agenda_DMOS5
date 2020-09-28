@@ -6,10 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
+import br.edu.dmos5.agenda_dmos5.model.Contato;
+import br.edu.dmos5.agenda_dmos5.model.Usuario;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import br.edu.dmos5.agenda_dmos5.model.Contato;
 
 public class ContatoDao {
     private Context context;
@@ -28,6 +29,7 @@ public class ContatoDao {
         values.put(ContatoContratoDao.ContatoEntry.COLUNA_NOME, contato.getNome());
         values.put(ContatoContratoDao.ContatoEntry.COLUNA_TELEFONE, contato.getTelefone());
         values.put(ContatoContratoDao.ContatoEntry.COLUNA_CELULAR, contato.getCelular());
+        values.put(ContatoContratoDao.ContatoEntry.COLUNA_ID_USUARIO, Usuario.getUsuarioLogado().getId());
 
         db.insert(ContatoContratoDao.ContatoEntry.NOME_TABELA, null, values);
 
@@ -42,18 +44,24 @@ public class ContatoDao {
         contatos = new ArrayList<Contato>();
         SQLiteHelper dbHelper = new SQLiteHelper(this.context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
+
         String colunas[] = new String[]{
                 BaseColumns._ID,
                 ContatoContratoDao.ContatoEntry.COLUNA_NOME,
                 ContatoContratoDao.ContatoEntry.COLUNA_TELEFONE,
-                ContatoContratoDao.ContatoEntry.COLUNA_CELULAR
+                ContatoContratoDao.ContatoEntry.COLUNA_CELULAR,
+                ContatoContratoDao.ContatoEntry.COLUNA_ID_USUARIO
         };
+
         String orderBy = ContatoContratoDao.ContatoEntry.COLUNA_NOME + " ASC";
+        String where = ContatoContratoDao.ContatoEntry.COLUNA_ID_USUARIO + " = ?";
+        String[] argumentos = {String.valueOf(Usuario.getUsuarioLogado().getId())};
+
         cursor = db.query(
                 ContatoContratoDao.ContatoEntry.NOME_TABELA,
                 colunas,
-                null,
-                null,
+                where,
+                argumentos,
                 null,
                 null,
                 orderBy
@@ -64,7 +72,8 @@ public class ContatoDao {
                     cursor.getInt(0),
                     cursor.getString(1),
                     cursor.getString(2),
-                    cursor.getString(3)
+                    cursor.getString(3),
+                    Usuario.getUsuarioLogado()
             );
             contatos.add(contato);
         }

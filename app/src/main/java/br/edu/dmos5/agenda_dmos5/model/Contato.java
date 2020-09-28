@@ -7,18 +7,21 @@ public class Contato {
     private String nome;
     private String telefone;
     private String celular;
+    private Usuario usuario;
 
-    public Contato(Integer id, String nome, String telefone, String celular) {
+    public Contato(Integer id, String nome, String telefone, String celular, Usuario usuario) {
         this.id = id;
         this.nome = nome;
         this.telefone = telefone;
         this.celular = celular;
+        this.usuario = usuario;
     }
 
-    public Contato(String nome, String telefone, String celular) {
+    public Contato(String nome, String telefone, String celular, Usuario usuario) {
         this.nome = nome;
         this.telefone = telefone;
         this.celular = celular;
+        this.usuario = usuario;
     }
 
     public Integer getId() {
@@ -52,6 +55,10 @@ public class Contato {
     public void setCelular(String celular) {
         this.celular = celular;
     }
+
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+
+    public Usuario getUsuario() { return usuario; }
 
     @NonNull
     @Override

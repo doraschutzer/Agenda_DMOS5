@@ -1,16 +1,14 @@
 <resources>
     <string name="app_name">Agenda_DMOS5</string>
     <string name="tag">AGENDA</string>
-
-    <!--Constantes de dados -->
     <string name="data_file">dados_contatos</string>
     <string name="table_contatos">contatos</string>
     <string name="column_nome">nome</string>
     <string name="column_telefone">telefone</string>
     <string name="column_celular">celular</string>
-
-    <!--Mensagens do app-->
     <string name="hint_nome">Nome do Contato</string>
+    <string name="hint_nome_usuario">Nome do Usuário</string>
+    <string name="hint_usuario">E-mail</string>
     <string name="hint_telefone">Telefone Fixo</string>
     <string name="hint_celular">Telefone Celular</string>
     <string name="salvar">Salvar</string>
@@ -19,13 +17,24 @@
     <string name="erro_insercao_dados">Erro ao salvar o site</string>
     <string name="sucesso">Salvo com sucesso!</string>
     <string name="detalhe">Contato</string>
-
-    <!-- Texto da NovoSiteActivity -->
-    <string name="actnovo_button_save">Salvar</string>
-    <string name="actnovo_hint_address">Informe a URL do site</string>
-    <string name="actnovo_hint_title">Apelido do site</string>
+    <string name="usuario">Usuário</string>
+    <string name="senha">Senha</string>
+    <string name="login">LogIn</string>
+    <string name="logout">Sair</string>
+    <string name="continuar_conectado">Continuar conectado</string>
+    <string name="cadastrar_usuario">Novo Usuário</string>
+    <string name="hint_senha">Senha</string>
     <string name="actnovo_msg_save_sucess">Salvo com sucesso</string>
     <string name="actnovo_msg_erro_data_missing">Por favor, preencha todos os dados</string>
     <string name="erro_empty_dados">O nome e o telefone ou celular são obrigatórios.</string>
     <string name="erro_null_contato">Contato inválido!</string>
+    <string name="usuario_senha_error">Usuário e/ou senha inválidos.</string>
+    <string name="cadastro_usuario_error">Usuário já cadastrado.</string>
+    <string name="login_usuario_error">Usuário não encontrado.</string>
+    <string name="senha_invalida_error">Senha inválida.</string>
+    <string name="preferences_usuario_error">Erro ao adicionar preferências de usuário</string>
+    <string name="usuario_invalido_error">Usuário inválido.</string>
+    <string name="usuario_existe">Usuário já existe.</string>
+    <string name="usuario_error">Usuário com menos de 6 caracteres.</string>
+    <string name="senha_error">Senhas diferentes e/ou menor do que 6 caracteres.</string>
 </resources>
