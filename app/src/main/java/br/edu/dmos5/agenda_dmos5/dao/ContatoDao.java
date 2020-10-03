@@ -27,8 +27,6 @@ public class ContatoDao {
 
         ContentValues values = new ContentValues();
         values.put(ContatoContratoDao.ContatoEntry.COLUNA_NOME, contato.getNome());
-        values.put(ContatoContratoDao.ContatoEntry.COLUNA_TELEFONE, contato.getTelefone());
-        values.put(ContatoContratoDao.ContatoEntry.COLUNA_CELULAR, contato.getCelular());
         values.put(ContatoContratoDao.ContatoEntry.COLUNA_ID_USUARIO, Usuario.getUsuarioLogado().getId());
 
         db.insert(ContatoContratoDao.ContatoEntry.NOME_TABELA, null, values);
@@ -46,10 +44,8 @@ public class ContatoDao {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         String colunas[] = new String[]{
-                BaseColumns._ID,
+                ContatoContratoDao.ContatoEntry._ID,
                 ContatoContratoDao.ContatoEntry.COLUNA_NOME,
-                ContatoContratoDao.ContatoEntry.COLUNA_TELEFONE,
-                ContatoContratoDao.ContatoEntry.COLUNA_CELULAR,
                 ContatoContratoDao.ContatoEntry.COLUNA_ID_USUARIO
         };
 
@@ -71,8 +67,6 @@ public class ContatoDao {
             contato = new Contato(
                     cursor.getInt(0),
                     cursor.getString(1),
-                    cursor.getString(2),
-                    cursor.getString(3),
                     Usuario.getUsuarioLogado()
             );
             contatos.add(contato);

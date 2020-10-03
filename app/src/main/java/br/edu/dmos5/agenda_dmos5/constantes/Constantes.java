@@ -1,6 +1,7 @@
 package br.edu.dmos5.agenda_dmos5.constantes;
 
 public class Constantes {
+    public static final String ATTR_ID = "id";
     public static final String ATTR_NOME = "nome";
     public static final String ATTR_TELEFONE = "telefone";
     public static final String ATTR_CELULAR = "celular";

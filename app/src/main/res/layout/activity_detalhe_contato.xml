@@ -19,6 +19,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/button_add_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_telefone"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/button_add_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/ic_email"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_add_phone" />
+
     <TextView
         android:id="@+id/text_detalhe_telefone"
         android:layout_width="wrap_content"
@@ -33,43 +55,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textview_nome" />
 
-    <TextView
-        android:id="@+id/textview_telefone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="40dp"
-        android:gravity="center"
-        android:text="Tel"
-        android:textColor="#000"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/text_detalhe_telefone"
-        app:layout_constraintTop_toBottomOf="@+id/textview_nome" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_lista_telefone"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/text_detalhe_telefone" />
 
     <TextView
-        android:id="@+id/text_detalhe_celular"
+        android:id="@+id/text_detalhe_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:paddingBottom="16dp"
-        android:text="Celular: "
+        android:text="Email: "
         android:textStyle="bold"
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_detalhe_telefone" />
+        app:layout_constraintTop_toBottomOf="@+id/recycler_lista_telefone" />
 
-    <TextView
-        android:id="@+id/textview_celular"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="Cel"
-        android:textColor="#000"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/textview_telefone"
-        app:layout_constraintTop_toBottomOf="@+id/text_detalhe_telefone" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_lista_email"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/text_detalhe_email" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

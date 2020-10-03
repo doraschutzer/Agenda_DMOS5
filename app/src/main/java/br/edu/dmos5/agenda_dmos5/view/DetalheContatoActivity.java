@@ -1,14 +1,32 @@
 package br.edu.dmos5.agenda_dmos5.view;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import br.edu.dmos5.agenda_dmos5.R;
 import br.edu.dmos5.agenda_dmos5.constantes.Constantes;
+import br.edu.dmos5.agenda_dmos5.dao.EmailDao;
+import br.edu.dmos5.agenda_dmos5.dao.TelefoneDao;
+import br.edu.dmos5.agenda_dmos5.enums.TelefoneEnum;
+import br.edu.dmos5.agenda_dmos5.helper.ShowMessageScreenHelper;
 import br.edu.dmos5.agenda_dmos5.model.Contato;
+import br.edu.dmos5.agenda_dmos5.model.Email;
+import br.edu.dmos5.agenda_dmos5.model.Telefone;
 import br.edu.dmos5.agenda_dmos5.model.Usuario;
 
 public class DetalheContatoActivity extends AppCompatActivity {
@@ -16,8 +34,20 @@ public class DetalheContatoActivity extends AppCompatActivity {
     private TextView nomeTextView;
     private TextView telefoneTextView;
     private TextView celularTextView;
+    private FloatingActionButton buttonAdicionaEmail;
+    private FloatingActionButton buttonAdicionaTelefone;
+
+    private RecyclerView telefoneRecyclerView;
+    private RecyclerView emailRecyclerView;
+    private ItemTelefoneAdapter telefoneAdapter;
+    private ItemEmailAdapter emailAdapter;
+    private RecyclerView.LayoutManager telefoneLayout;
+    private RecyclerView.LayoutManager emailLayout;
+    private AlertDialog dialog;
 
     private Contato contato;
+    private TelefoneDao telefoneDao;
+    private EmailDao emailDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,13 +55,92 @@ public class DetalheContatoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detalhe_contato);
 
         nomeTextView = findViewById(R.id.textview_nome);
-        telefoneTextView = findViewById(R.id.textview_telefone);
-        celularTextView = findViewById(R.id.textview_celular);
+        emailRecyclerView = findViewById(R.id.recycler_lista_email);
+        telefoneRecyclerView = findViewById(R.id.recycler_lista_telefone);
+        buttonAdicionaEmail = findViewById(R.id.button_add_email);
+        buttonAdicionaTelefone = findViewById(R.id.button_add_phone);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Usuario usuario;
+
+        try {
+            usuario = Usuario.getUsuarioLogado();
+            telefoneDao = new TelefoneDao(getApplicationContext());
+            emailDao = new EmailDao(getApplicationContext());
+        } catch (Exception error) {
+            ShowMessageScreenHelper.showToast(error.getMessage(), getApplicationContext());
+            finish();
+        }
 
         extrairArgumentos();
         exibeDados();
+
+        emailLayout = new LinearLayoutManager(getApplicationContext());
+        emailRecyclerView.setLayoutManager(emailLayout);
+        emailAdapter = new ItemEmailAdapter(contato.getEmails());
+        emailRecyclerView.setAdapter(emailAdapter);
+
+        telefoneLayout = new LinearLayoutManager(getApplicationContext());
+        telefoneRecyclerView.setLayoutManager(telefoneLayout);
+        telefoneAdapter = new ItemTelefoneAdapter(contato.getTelefones());
+        telefoneRecyclerView.setAdapter(telefoneAdapter);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        buttonAdicionaEmail.setOnClickListener(v -> {
+            LayoutInflater layoutInflater = getLayoutInflater();
+
+            View view = layoutInflater.inflate(R.layout.dialog_add_email, null);
+
+            Button btnSaveEmail = view.findViewById(R.id.button_salvar_email);
+            EditText editEmail = view.findViewById(R.id.edit_email);
+
+            btnSaveEmail.setOnClickListener(vv -> {
+                String email = editEmail.getText().toString();
+                inserirEmail(email);
+                dialog.dismiss();
+            });
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle(R.string.salvar);
+            builder.setView(view);
+            dialog = builder.create();
+            dialog.show();
+        });
+
+        buttonAdicionaTelefone.setOnClickListener(v -> {
+            LayoutInflater layoutInflater = getLayoutInflater();
+
+            View view = layoutInflater.inflate(
+                    R.layout.dialog_add_telefone
+                    , null
+            );
+
+            Button buttonSalvarTel = view.findViewById(R.id.button_salvar_telefone);
+            EditText editNumero = view.findViewById(R.id.edit_numero);
+            RadioGroup radio = view.findViewById(R.id.radio_grupo);
+
+            buttonSalvarTel.setOnClickListener(vv -> {
+                int radioTipo = radio.getCheckedRadioButtonId();
+                String numero = editNumero.getText().toString();
+                switch (radioTipo) {
+                    case R.id.radio_celular:
+                        inserirTelefone(TelefoneEnum.celular, numero);
+                        break;
+                    case R.id.radio_fixo:
+                        inserirTelefone(TelefoneEnum.fixo, numero);
+                        break;
+                }
+                dialog.dismiss();
+            });
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle(R.string.salvar);
+            builder.setView(view);
+            dialog = builder.create();
+            dialog.show();
+        });
     }
 
     @Override
@@ -39,33 +148,64 @@ public class DetalheContatoActivity extends AppCompatActivity {
         super.finish();
     }
 
-    private void extrairArgumentos(){
+    private void extrairArgumentos() {
         Intent intent = getIntent();
         Bundle embrulho = intent.getExtras();
 
-        if(embrulho != null){
-            String nome     = embrulho.getString(Constantes.ATTR_NOME);
-            String telefone = embrulho.getString(Constantes.ATTR_TELEFONE);
-            String celular  = embrulho.getString(Constantes.ATTR_CELULAR);
-
-            contato = new Contato(nome,telefone,celular,Usuario.getUsuarioLogado());
+        if (embrulho != null) {
+            Integer id = embrulho.getInt(Constantes.ATTR_ID);
+            String nome = embrulho.getString(Constantes.ATTR_NOME);
+            contato = new Contato(id, nome, Usuario.getUsuarioLogado());
+            telefoneDao.listAll(contato);
+            emailDao.listAll(contato);
         }
     }
 
-    private void exibeDados(){
-        if(contato != null) {
+    private void exibeDados() {
+        if (contato != null) {
             nomeTextView.setText(contato.getNome());
-            telefoneTextView.setText(contato.getTelefone());
-            celularTextView.setText(contato.getCelular());
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void inserirEmail(String dominio) {
+        if (contato != null && !dominio.isEmpty()) {
+            try {
+                Email email = new Email(null, dominio, contato);
+                email.setContato(contato);
+                emailDao.add(email);
+                contato.insereEmail(email);
+                emailRecyclerView.getAdapter().notifyDataSetChanged();
+            } catch (SQLiteConstraintException e) {
+                ShowMessageScreenHelper.showToast(getString(R.string.email_error), getApplicationContext());
+            }
+        } else {
+            ShowMessageScreenHelper.showToast(getString(R.string.add_email_error), getApplicationContext());
+        }
+    }
+
+    public void inserirTelefone(TelefoneEnum telefoneEnum, String numero) {
+        if (contato != null && !numero.isEmpty()) {
+            try {
+                Telefone telefone = new Telefone(null, numero, telefoneEnum, contato);
+                telefone.setContato(contato);
+                telefoneDao.add(telefone);
+                contato.insereTelefone(telefone);
+                telefoneRecyclerView.getAdapter().notifyDataSetChanged();
+            } catch (SQLiteConstraintException e) {
+                ShowMessageScreenHelper.showToast(getString(R.string.telefone_error), getApplicationContext()
+                );
+            }
+        } else {
+            ShowMessageScreenHelper.showToast(getString(R.string.add_telefone_error), getApplicationContext());
+        }
     }
 }

@@ -107,8 +107,7 @@ public class ContatosActivity extends AppCompatActivity {
     private void detalharContato(int position) {
         Bundle args = new Bundle();
         args.putString(Constantes.ATTR_NOME, contatos.get(position).getNome());
-        args.putString(Constantes.ATTR_TELEFONE, contatos.get(position).getTelefone());
-        args.putString(Constantes.ATTR_CELULAR, contatos.get(position).getCelular());
+        args.putInt(Constantes.ATTR_ID, contatos.get(position).getId());
         Intent intent = new Intent(getApplicationContext(), DetalheContatoActivity.class);
         intent.putExtras(args);
         startActivityForResult(intent, DETALHES_ITEM_CONTATO);

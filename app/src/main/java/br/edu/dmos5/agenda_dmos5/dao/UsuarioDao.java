@@ -25,11 +25,11 @@ public class UsuarioDao {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(UsuarioContratoDao.ContatoEntry.COLUNA_NOME, usuario.getNome());
-        values.put(UsuarioContratoDao.ContatoEntry.COLUNA_LOGIN, usuario.getLogin());
-        values.put(UsuarioContratoDao.ContatoEntry.COLUNA_SENHA, usuario.getSenha());
+        values.put(UsuarioContratoDao.UsuarioEntry.COLUNA_NOME, usuario.getNome());
+        values.put(UsuarioContratoDao.UsuarioEntry.COLUNA_LOGIN, usuario.getLogin());
+        values.put(UsuarioContratoDao.UsuarioEntry.COLUNA_SENHA, usuario.getSenha());
 
-        db.insert(UsuarioContratoDao.ContatoEntry.NOME_TABELA, null, values);
+        db.insert(UsuarioContratoDao.UsuarioEntry.NOME_TABELA, null, values);
         db.close();
     }
 
@@ -40,14 +40,14 @@ public class UsuarioDao {
 
         String colunas[] = new String[]{
                 BaseColumns._ID,
-                UsuarioContratoDao.ContatoEntry.COLUNA_NOME,
-                UsuarioContratoDao.ContatoEntry.COLUNA_LOGIN,
-                UsuarioContratoDao.ContatoEntry.COLUNA_SENHA
+                UsuarioContratoDao.UsuarioEntry.COLUNA_NOME,
+                UsuarioContratoDao.UsuarioEntry.COLUNA_LOGIN,
+                UsuarioContratoDao.UsuarioEntry.COLUNA_SENHA
         };
 
         String orderBy = ContatoContratoDao.ContatoEntry.COLUNA_ID_USUARIO + " ASC";
         Cursor cursor = db.query(
-                UsuarioContratoDao.ContatoEntry.NOME_TABELA,
+                UsuarioContratoDao.UsuarioEntry.NOME_TABELA,
                 colunas,
                 null,
                 null,
@@ -77,16 +77,16 @@ public class UsuarioDao {
 
         String columns[] = new String[]{
                 BaseColumns._ID,
-                UsuarioContratoDao.ContatoEntry.COLUNA_NOME,
-                UsuarioContratoDao.ContatoEntry.COLUNA_LOGIN,
-                UsuarioContratoDao.ContatoEntry.COLUNA_SENHA
+                UsuarioContratoDao.UsuarioEntry.COLUNA_NOME,
+                UsuarioContratoDao.UsuarioEntry.COLUNA_LOGIN,
+                UsuarioContratoDao.UsuarioEntry.COLUNA_SENHA
         };
 
-        String where = UsuarioContratoDao.ContatoEntry.COLUNA_LOGIN + " = ?";
+        String where = UsuarioContratoDao.UsuarioEntry.COLUNA_LOGIN + " = ?";
         String[] argumentos = {arg};
-
+        System.out.println(UsuarioContratoDao.UsuarioEntry.NOME_TABELA);
         Cursor cursor = db.query(
-                UsuarioContratoDao.ContatoEntry.NOME_TABELA,
+                UsuarioContratoDao.UsuarioEntry.NOME_TABELA,
                 columns,
                 where,
                 argumentos,

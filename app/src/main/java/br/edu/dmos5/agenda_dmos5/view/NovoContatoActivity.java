@@ -38,8 +38,6 @@ public class NovoContatoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_novo_contato);
 
         nomeEditText = findViewById(R.id.edittext_nome);
-        telefoneEditText = findViewById(R.id.edittext_telefone);
-        celularEditText = findViewById(R.id.edittext_celular);
         salvarButton = findViewById(R.id.button_salvar_contato);
         salvarButton.setOnClickListener(this::salvarContato);
         constraintLayout = findViewById(R.id.layout_novo_contato);
@@ -60,10 +58,8 @@ public class NovoContatoActivity extends AppCompatActivity {
     private void salvarContato(View view){
         String nome, telefone, celular;
         nome = nomeEditText.getText().toString();
-        telefone = telefoneEditText.getText().toString();
-        celular = celularEditText.getText().toString();
 
-        if(nome.isEmpty() && (telefone.isEmpty() || celular.isEmpty())){
+        if( nome.isEmpty() ){
             ShowMessageScreenHelper.showSnackbar(
                     getString(R.string.erro_empty_dados)
                     , constraintLayout
@@ -71,7 +67,7 @@ public class NovoContatoActivity extends AppCompatActivity {
         }else{
             contatoDao = new ContatoDao(getApplicationContext());
             try {
-                contatoDao.add(new Contato(nome, telefone, celular, Usuario.getUsuarioLogado()));
+                contatoDao.add(new Contato(null, nome, Usuario.getUsuarioLogado()));
                 finalizar(true);
             } catch (NullPointerException e){
                 showSnackbar(getString(R.string.erro_null_contato));
@@ -90,11 +86,7 @@ public class NovoContatoActivity extends AppCompatActivity {
 
     private void finalizar(boolean sucesso){
         if(sucesso){
-            Intent result = new Intent();
-            result.putExtra(Constantes.ATTR_NOME, nomeEditText.getText().toString());
-            result.putExtra(Constantes.ATTR_TELEFONE, telefoneEditText.getText().toString());
-            result.putExtra(Constantes.ATTR_CELULAR, celularEditText.getText().toString());
-            setResult(Activity.RESULT_OK, result);
+            setResult(Activity.RESULT_OK);
         }else{
             setResult(Activity.RESULT_CANCELED);
         }
