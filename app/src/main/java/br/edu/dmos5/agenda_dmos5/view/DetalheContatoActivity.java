@@ -12,14 +12,17 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import br.edu.dmos5.agenda_dmos5.R;
 import br.edu.dmos5.agenda_dmos5.constantes.Constantes;
+import br.edu.dmos5.agenda_dmos5.dao.ContatoDao;
 import br.edu.dmos5.agenda_dmos5.dao.EmailDao;
 import br.edu.dmos5.agenda_dmos5.dao.TelefoneDao;
 import br.edu.dmos5.agenda_dmos5.enums.TelefoneEnum;
@@ -36,6 +39,9 @@ public class DetalheContatoActivity extends AppCompatActivity {
     private TextView celularTextView;
     private FloatingActionButton buttonAdicionaEmail;
     private FloatingActionButton buttonAdicionaTelefone;
+    private FloatingActionButton buttonEditarContato;
+    private FloatingActionButton buttonRemoveContato;
+    private Switch switchFavoritar;
 
     private RecyclerView telefoneRecyclerView;
     private RecyclerView emailRecyclerView;
@@ -48,6 +54,7 @@ public class DetalheContatoActivity extends AppCompatActivity {
     private Contato contato;
     private TelefoneDao telefoneDao;
     private EmailDao emailDao;
+    private ContatoDao contatoDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +66,9 @@ public class DetalheContatoActivity extends AppCompatActivity {
         telefoneRecyclerView = findViewById(R.id.recycler_lista_telefone);
         buttonAdicionaEmail = findViewById(R.id.button_add_email);
         buttonAdicionaTelefone = findViewById(R.id.button_add_phone);
+        buttonEditarContato = findViewById(R.id.button_editar_contato);
+        buttonRemoveContato = findViewById(R.id.button_remover_contato);
+        switchFavoritar = findViewById(R.id.switch_favoritar);
 
         Usuario usuario;
 
@@ -66,6 +76,7 @@ public class DetalheContatoActivity extends AppCompatActivity {
             usuario = Usuario.getUsuarioLogado();
             telefoneDao = new TelefoneDao(getApplicationContext());
             emailDao = new EmailDao(getApplicationContext());
+            contatoDao = new ContatoDao(getApplicationContext());
         } catch (Exception error) {
             ShowMessageScreenHelper.showToast(error.getMessage(), getApplicationContext());
             finish();
@@ -73,6 +84,7 @@ public class DetalheContatoActivity extends AppCompatActivity {
 
         extrairArgumentos();
         exibeDados();
+        verificarFavorito();
 
         emailLayout = new LinearLayoutManager(getApplicationContext());
         emailRecyclerView.setLayoutManager(emailLayout);
@@ -85,6 +97,11 @@ public class DetalheContatoActivity extends AppCompatActivity {
         telefoneRecyclerView.setAdapter(telefoneAdapter);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        switchFavoritar.setOnCheckedChangeListener(this::favoritar);
+        buttonEditarContato.setOnClickListener(this::editarContato);
+        buttonRemoveContato.setOnClickListener(this::removerContato);
 
         buttonAdicionaEmail.setOnClickListener(v -> {
             LayoutInflater layoutInflater = getLayoutInflater();
@@ -148,6 +165,51 @@ public class DetalheContatoActivity extends AppCompatActivity {
         super.finish();
     }
 
+    private void removerContato(View v) {
+        contatoDao.remover(contato);
+        finish();
+    }
+
+    private void favoritar(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked != true) {
+            contato.setFavorito(false);
+        } else {
+            contato.setFavorito(true);
+        }
+        contatoDao.atualizar(contato);
+    }
+
+    public void verificarFavorito() {
+        if ( !contato.getFavorito() ) switchFavoritar.setChecked(false);
+        else switchFavoritar.setChecked(true);
+    }
+
+    private void editarContato(View v) {
+        LayoutInflater layoutInflater = getLayoutInflater();
+        View view = layoutInflater.inflate(R.layout.dialog_edit_contato, null);
+
+        Button buttonSalvarEdicao = view.findViewById(R.id.button_salvar_edicao);
+        EditText editNovoNome = view.findViewById(R.id.edit_novo_nome);
+
+        buttonSalvarEdicao.setOnClickListener(vv -> {
+            String nome = editNovoNome.getText().toString();
+            if (!nome.isEmpty()) {
+                contato.setNome(nome);
+                contatoDao.atualizar(contato);
+                nomeTextView.setText(nome);
+            } else {
+                ShowMessageScreenHelper.showToast(getString(R.string.edit_nome_error),getApplicationContext());
+            }
+            dialog.dismiss();
+        });
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.editar_nome_contato);
+        builder.setView(view);
+        dialog = builder.create();
+        dialog.show();
+    }
+
     private void extrairArgumentos() {
         Intent intent = getIntent();
         Bundle embrulho = intent.getExtras();
@@ -155,7 +217,8 @@ public class DetalheContatoActivity extends AppCompatActivity {
         if (embrulho != null) {
             Integer id = embrulho.getInt(Constantes.ATTR_ID);
             String nome = embrulho.getString(Constantes.ATTR_NOME);
-            contato = new Contato(id, nome, Usuario.getUsuarioLogado());
+            boolean favorito = embrulho.getBoolean(Constantes.ATTR_FAVORITO);
+            contato = new Contato(id, nome, Usuario.getUsuarioLogado(), favorito);
             telefoneDao.listAll(contato);
             emailDao.listAll(contato);
         }

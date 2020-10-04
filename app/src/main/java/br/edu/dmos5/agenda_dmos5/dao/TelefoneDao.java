@@ -82,4 +82,16 @@ public class TelefoneDao {
 
         return telefones;
     }
+
+    public void delete(Telefone telefone) {
+
+        SQLiteDatabase db = sqHelper.getWritableDatabase();
+
+        String[] whereArgs = {String.valueOf(telefone.getId())};
+        String whereClause = BaseColumns._ID + "= ?";
+
+        db.delete(TelefoneContratoDao.TelefoneEntry.NOME_TABELA, whereClause, whereArgs);
+
+        db.close();
+    }
 }

@@ -12,6 +12,7 @@ public class ContatoContratoDao {
         public static final String COLUNA_TELEFONE = "telefone";
         public static final String COLUNA_CELULAR = "celular";
         public static final String COLUNA_ID_USUARIO = "id_usuario";
+        public static final String COLUNA_FAVORITO = "favorito";
         public static final String NOME_TABELA_TEMPORARIA = "temporaria";
     }
 
@@ -57,4 +58,7 @@ public class ContatoContratoDao {
                     + ", OLD." + ContatoEntry.COLUNA_ID_USUARIO
                     + " FROM " + ContatoEntry.NOME_TABELA_TEMPORARIA + " OLD"
                     + " WHERE " + ContatoEntry.COLUNA_ID_USUARIO  + " IS NOT NULL";
+
+    public static final String ALTER_TABLE_ADD_FAVORITO =
+            "ALTER TABLE " + ContatoEntry.NOME_TABELA + " ADD " + ContatoEntry.COLUNA_FAVORITO + " INTEGER;";
 }

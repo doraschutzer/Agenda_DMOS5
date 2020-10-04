@@ -4,9 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -36,6 +38,7 @@ public class ItemContatoAdapter extends RecyclerView.Adapter<ItemContatoAdapter.
         View view;
         view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_lista_contato, parent,
                 false);
+
         ContatosViewHolder viewHolder = new ContatosViewHolder(view);
         return viewHolder;
     }
@@ -43,6 +46,13 @@ public class ItemContatoAdapter extends RecyclerView.Adapter<ItemContatoAdapter.
     @Override
     public void onBindViewHolder(@NonNull ContatosViewHolder holder, int position) {
         holder.nomeTextView.setText(contatoList.get(position).getNome());
+        if (contatoList.get(position).getFavorito()){
+            holder.favoritoImage.setImageResource(R.drawable.ic_favorito_on);
+        } else {
+            holder.favoritoImage.setImageResource(R.drawable.ic_favorito_off);
+        }
+
+
     }
 
     @Override
@@ -52,6 +62,8 @@ public class ItemContatoAdapter extends RecyclerView.Adapter<ItemContatoAdapter.
 
     public static class ContatosViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView nomeTextView;
+        public ImageView favoritoImage;
+        public ImageView removerTelefoneImagem;
 
         /*
         O Construtor recupera os elementos de layout
@@ -59,6 +71,7 @@ public class ItemContatoAdapter extends RecyclerView.Adapter<ItemContatoAdapter.
         public ContatosViewHolder(@NonNull View itemView) {
             super(itemView);
             nomeTextView = itemView.findViewById(R.id.text_nome);
+            favoritoImage = itemView.findViewById(R.id.imagem_favorito);
             itemView.setOnClickListener(this);
         }
 

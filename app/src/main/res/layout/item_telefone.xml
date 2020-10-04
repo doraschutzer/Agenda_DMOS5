@@ -24,4 +24,14 @@
         app:layout_constraintStart_toEndOf="@+id/imagem_telefone"
         app:layout_constraintTop_toTopOf="@+id/imagem_telefone" />
 
+    <ImageView
+        android:id="@+id/imagem_remover_telefone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_deletar"
+        android:layout_marginEnd="70dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

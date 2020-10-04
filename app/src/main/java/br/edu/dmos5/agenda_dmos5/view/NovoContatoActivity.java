@@ -67,7 +67,7 @@ public class NovoContatoActivity extends AppCompatActivity {
         }else{
             contatoDao = new ContatoDao(getApplicationContext());
             try {
-                contatoDao.add(new Contato(null, nome, Usuario.getUsuarioLogado()));
+                contatoDao.add(new Contato(null, nome, Usuario.getUsuarioLogado(), false));
                 finalizar(true);
             } catch (NullPointerException e){
                 showSnackbar(getString(R.string.erro_null_contato));

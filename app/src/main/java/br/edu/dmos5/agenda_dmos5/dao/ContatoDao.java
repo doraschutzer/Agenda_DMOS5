@@ -46,10 +46,11 @@ public class ContatoDao {
         String colunas[] = new String[]{
                 ContatoContratoDao.ContatoEntry._ID,
                 ContatoContratoDao.ContatoEntry.COLUNA_NOME,
-                ContatoContratoDao.ContatoEntry.COLUNA_ID_USUARIO
+                ContatoContratoDao.ContatoEntry.COLUNA_ID_USUARIO,
+                ContatoContratoDao.ContatoEntry.COLUNA_FAVORITO
         };
 
-        String orderBy = ContatoContratoDao.ContatoEntry.COLUNA_NOME + " ASC";
+        String orderBy = ContatoContratoDao.ContatoEntry.COLUNA_NOME + " ASC, " + ContatoContratoDao.ContatoEntry.COLUNA_FAVORITO + " DESC";
         String where = ContatoContratoDao.ContatoEntry.COLUNA_ID_USUARIO + " = ?";
         String[] argumentos = {String.valueOf(Usuario.getUsuarioLogado().getId())};
 
@@ -67,12 +68,45 @@ public class ContatoDao {
             contato = new Contato(
                     cursor.getInt(0),
                     cursor.getString(1),
-                    Usuario.getUsuarioLogado()
+                    Usuario.getUsuarioLogado(),
+                    cursor.getInt(3) > 0
             );
             contatos.add(contato);
         }
         cursor.close();
         db.close();
         return contatos;
+    }
+
+    public void atualizar(Contato contato) {
+        SQLiteHelper dbHelper = new SQLiteHelper(this.context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        if (contato == null) throw new NullPointerException();
+        ContentValues valores = new ContentValues();
+        valores.put(ContatoContratoDao.ContatoEntry.COLUNA_NOME, contato.getNome());
+
+        if (!contato.getFavorito()) {
+            valores.put(ContatoContratoDao.ContatoEntry.COLUNA_FAVORITO, 0);
+        } else {
+            valores.put(ContatoContratoDao.ContatoEntry.COLUNA_FAVORITO, 1);
+        }
+
+        String[] where = {String.valueOf(contato.getId())};
+        String argumentos = ContatoContratoDao.ContatoEntry._ID + "= ?";
+        db.update(ContatoContratoDao.ContatoEntry.NOME_TABELA, valores, argumentos, where);
+        db.close();
+    }
+
+    public void remover(Contato contato) {
+        SQLiteHelper dbHelper = new SQLiteHelper(this.context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        if (contato == null) throw new NullPointerException();
+
+        String[] where = {String.valueOf(contato.getId())};
+        String argumentos = ContatoContratoDao.ContatoEntry._ID + "= ?";
+        db.delete(ContatoContratoDao.ContatoEntry.NOME_TABELA, argumentos, where);
+        db.close();
     }
 }

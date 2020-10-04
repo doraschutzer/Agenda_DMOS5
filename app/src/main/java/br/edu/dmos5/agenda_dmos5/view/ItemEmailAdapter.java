@@ -1,8 +1,10 @@
 package br.edu.dmos5.agenda_dmos5.view;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import br.edu.dmos5.agenda_dmos5.R;
+import br.edu.dmos5.agenda_dmos5.dao.EmailDao;
 import br.edu.dmos5.agenda_dmos5.model.Email;
 
 public class ItemEmailAdapter extends RecyclerView.Adapter<ItemEmailAdapter.EmailViewHolder>{
@@ -36,6 +39,13 @@ public class ItemEmailAdapter extends RecyclerView.Adapter<ItemEmailAdapter.Emai
     @Override
     public void onBindViewHolder(@NonNull EmailViewHolder holder, int position) {
         holder.textEmail.setText(emails.get(position).getDominio());
+
+        holder.imagemRemoverEmail.setOnClickListener(v -> {
+            EmailDao emailDao = new EmailDao(holder.context);
+            emailDao.delete(emails.get(position));
+            emails.remove(position);
+            notifyDataSetChanged();
+        });
     }
 
     @Override
@@ -47,10 +57,18 @@ public class ItemEmailAdapter extends RecyclerView.Adapter<ItemEmailAdapter.Emai
 
         public TextView textEmail;
 
+        public ImageView imagemRemoverEmail;
+
+        public Context context;
+
         public EmailViewHolder(@NonNull View itemView) {
             super(itemView);
 
             textEmail = itemView.findViewById(R.id.text_email);
+
+            imagemRemoverEmail = itemView.findViewById(R.id.imagem_remover_email);
+
+            context = itemView.getContext();
 
             itemView.setOnClickListener(this);
         }

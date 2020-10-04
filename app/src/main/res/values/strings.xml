@@ -28,6 +28,7 @@
     <string name="cadastrar_usuario">Novo Usuário</string>
     <string name="actnovo_msg_save_sucess">Salvo com sucesso</string>
     <string name="actnovo_msg_erro_data_missing">Por favor, preencha todos os dados</string>
+    <string name="editar_nome_contato">Editar Contato</string>
     <string name="erro_empty_dados">O nome é obrigatório.</string>
     <string name="erro_null_contato">Contato inválido!</string>
     <string name="usuario_senha_error">Usuário e/ou senha inválidos.</string>
@@ -44,4 +45,5 @@
     <string name="numero_error">Número inválido.</string>
     <string name="add_telefone_error">Erro ao inserir o número.</string>
     <string name="add_email_error">Erro ao inserir o email.</string>
+    <string name="edit_nome_error">Nome vazio.</string>
 </resources>

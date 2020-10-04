@@ -81,4 +81,16 @@ public class EmailDao {
 
         return emails;
     }
+
+    public void delete(Email email) {
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String[] whereArgs = {String.valueOf(email.getId())};
+        String whereClause = BaseColumns._ID + "= ?";
+
+        db.delete(EmailContratoDao.EmailEntry.NOME_TABELA, whereClause, whereArgs);
+
+        db.close();
+    }
 }

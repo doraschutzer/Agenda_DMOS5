@@ -24,4 +24,14 @@
         app:layout_constraintStart_toEndOf="@+id/imagem_email"
         app:layout_constraintTop_toTopOf="@+id/imagem_email" />
 
+    <ImageView
+        android:id="@+id/imagem_remover_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_deletar"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

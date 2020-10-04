@@ -108,6 +108,7 @@ public class ContatosActivity extends AppCompatActivity {
         Bundle args = new Bundle();
         args.putString(Constantes.ATTR_NOME, contatos.get(position).getNome());
         args.putInt(Constantes.ATTR_ID, contatos.get(position).getId());
+        args.putBoolean(Constantes.ATTR_FAVORITO, contatos.get(position).getFavorito());
         Intent intent = new Intent(getApplicationContext(), DetalheContatoActivity.class);
         intent.putExtras(args);
         startActivityForResult(intent, DETALHES_ITEM_CONTATO);
@@ -187,7 +188,8 @@ public class ContatosActivity extends AppCompatActivity {
                     listaContato();
                     componentesUsuarioLogado();
                 }
-            }
+            } case DETALHES_ITEM_CONTATO:
+                listaContato();
         }
     }
 }

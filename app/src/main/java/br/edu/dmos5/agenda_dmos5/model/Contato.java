@@ -13,15 +13,17 @@ public class Contato {
     private Usuario usuario;
     private List<Telefone> telefones;
     private List<Email> emails;
+    private boolean favorito = false;
 
-    public Contato(Integer id, String nome, Usuario usuario) {
+    public Contato(Integer id, String nome, Usuario usuario, boolean favorito) {
         this.id = id;
         this.nome = nome;
         this.telefone = telefone;
         this.celular = celular;
         this.usuario = usuario;
-        telefones = new ArrayList<Telefone>(10);
-        emails = new ArrayList<Email>(10);
+        this.favorito = favorito;
+        telefones = new ArrayList<Telefone>(25);
+        emails = new ArrayList<Email>(25);
     }
 
     public Integer getId() {
@@ -74,6 +76,14 @@ public class Contato {
 
     public List<Email> getEmails() {
         return emails;
+    }
+
+    public void setFavorito(boolean favorito) {
+        this.favorito = favorito;
+    }
+
+    public boolean getFavorito() {
+        return favorito;
     }
 
     @NonNull
