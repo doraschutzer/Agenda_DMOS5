@@ -1,6 +1,8 @@
 package br.edu.dmos5.agenda_dmos5.view;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +53,13 @@ public class ItemTelefoneAdapter extends RecyclerView.Adapter<ItemTelefoneAdapte
             telefoneDao.delete(telefones.get(position));
             telefones.remove(position);
             notifyDataSetChanged();
+        });
+
+        holder.imagem.setOnClickListener(v -> {
+            Uri uri = Uri.parse("tel:"+ telefones.get(position).getNumero());
+            Intent intent = new Intent(Intent.ACTION_DIAL,uri);
+
+            holder.context.startActivity(intent);
         });
     }
 

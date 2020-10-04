@@ -1,6 +1,8 @@
 package br.edu.dmos5.agenda_dmos5.view;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +48,12 @@ public class ItemEmailAdapter extends RecyclerView.Adapter<ItemEmailAdapter.Emai
             emails.remove(position);
             notifyDataSetChanged();
         });
+
+        holder.image.setOnClickListener(v -> {
+            Uri uri = Uri.parse("mailto:" + emails.get(position).getDominio());
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            holder.context.startActivity(intent);
+        });
     }
 
     @Override
@@ -59,6 +67,8 @@ public class ItemEmailAdapter extends RecyclerView.Adapter<ItemEmailAdapter.Emai
 
         public ImageView imagemRemoverEmail;
 
+        public ImageView image;
+
         public Context context;
 
         public EmailViewHolder(@NonNull View itemView) {
@@ -67,6 +77,8 @@ public class ItemEmailAdapter extends RecyclerView.Adapter<ItemEmailAdapter.Emai
             textEmail = itemView.findViewById(R.id.text_email);
 
             imagemRemoverEmail = itemView.findViewById(R.id.imagem_remover_email);
+
+            image = itemView.findViewById(R.id.imagem_email);
 
             context = itemView.getContext();
 
